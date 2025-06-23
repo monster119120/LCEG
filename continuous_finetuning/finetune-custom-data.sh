@@ -24,7 +24,7 @@ cd continuous_finetuning/
 
 # ----------------- Scripts for origin Llama, PI, NTK and YaRN Methos-------------------
 RECIPE_NAME=custom_data
-METHOD_NAME=pi # option:[origin, pi, ntk, yarn]
+METHOD_NAME=yarn # option:[origin, pi, ntk, yarn]
 TRAINING_LENGTH=16384 
 MODEL_PATH="../Llama-2-7b-hf/"
 WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}
@@ -38,9 +38,9 @@ torchrun  --nproc_per_node=8 \
         --use_flash_attn True \
         --low_rank_training False \
         --num_train_epochs 1 \
-        --per_device_train_batch_size 4 \
+        --per_device_train_batch_size 1 \
         --per_device_eval_batch_size 1 \
-        --gradient_accumulation_steps 8 \
+        --gradient_accumulation_steps 32 \
         --eval_strategy "no" \
         --save_strategy "epoch" \
         --save_total_limit 1 \
