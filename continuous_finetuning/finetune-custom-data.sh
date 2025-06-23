@@ -2,20 +2,20 @@
 
 cd ../
 
-# python data/sample_long.py \
-#     --data_dir "data_pool/" \
-#     --save_dir "data_pool/sampled_data" \
-#     --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
-#     --ratio 0.6 \
-#     --total_token_num 9e8   # 0.9B
+python data/sample_long.py \
+    --data_dir "data_pool/" \
+    --save_dir "data_pool/sampled_data" \
+    --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
+    --ratio 0.6 \
+    --total_token_num 2e8   # 0.2B
 
 
-# python data/sample_short.py \
-#     --data_dir "data_pool/" \
-#     --save_dir "data_pool/sampled_data" \
-#     --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
-#     --ratio 0.4 \
-#     --total_token_num 9e8   # 0.9B
+python data/sample_short.py \
+    --data_dir "data_pool/" \
+    --save_dir "data_pool/sampled_data" \
+    --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
+    --ratio 0.4 \
+    --total_token_num 2e8   # 0.2B
 
 
 
@@ -24,7 +24,7 @@ cd continuous_finetuning/
 
 # ----------------- Scripts for origin Llama, PI, NTK and YaRN Methos-------------------
 RECIPE_NAME=custom_data
-METHOD_NAME=pi # option:[origin, pi, ntk, yarn]
+METHOD_NAME=yarn # option:[origin, pi, ntk, yarn]
 TRAINING_LENGTH=16384 
 MODEL_PATH="../Llama-2-7b-hf/"
 WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}
@@ -42,7 +42,7 @@ torchrun  --nproc_per_node=8 \
         --per_device_eval_batch_size 1 \
         --gradient_accumulation_steps 8 \
         --eval_strategy "no" \
-        --save_steps 500 \
+        --save_steps 100 \
         --save_total_limit 1 \
         --learning_rate 2e-5 \
         --weight_decay 0.0 \
