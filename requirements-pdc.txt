@@ -1,0 +1,12 @@
+# transformers
+tensor_parallel==2.0.0
+# flash-attn
+# datasets==2.15.0
+deepspeed==0.14.4
+evaluate==0.4.1
+# numpy==1.23.4
+tqdm==4.65.2
+seaborn
+pandas
+matplotlib
+wandb
