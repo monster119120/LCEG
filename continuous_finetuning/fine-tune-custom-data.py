@@ -122,7 +122,7 @@ def reshape_fn(tokenizer, examples):
 
 def text_to_ids(tokenizer, batch):
     # When batched=True, batch['text'] is a list of strings
-    return {'input_ids': [tokenizer.encode(text, truncation=True, max_length=16384) for text in batch['tex_source']]}
+    return {'input_ids': [tokenizer.encode(text, truncation=True, padding=True, max_length=16384) for text in batch['text']]}
 
 
 def add_mem_tokens(example, mem_freq, mem_id):
@@ -294,7 +294,7 @@ def train():
         barrier()
 
     dataset = load_dataset('json',data_files=model_args.dataset_dir)
-    dataset['train'] = dataset['train'].select(range(10000))
+    # dataset['train'] = dataset['train'].select(range(10000))
     
     
     if rank == 0:

@@ -30,6 +30,6 @@ torchrun  --nproc_per_node=8 \
         --tf32 True \
         --report_to "none" \
         --use_wandb False \
-        --dataset_dir '../long_context_processed_data/arxiv/*.jsonl' \
+        --dataset_dir '../tmp/278.jsonl' \
         --method_name ${METHOD_NAME} \
         --wandb_name ${WANDB_NAME} 

@@ -72,8 +72,6 @@ def get_sample_dataset(dataset, token_num):
     random.shuffle(dataset)
     cur_token_num = 0
     for data in dataset:
-        if token_num >= 16384:
-            continue
 
         if cur_token_num >= token_num:
             break
@@ -108,20 +106,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     token_num_sum = sum([args.cn, args.en, args.baike, args.arxiv, args.code, args.math, args.instruction, args.ai_search, args.log_278])
-    # token_num_dict = {
-    #     "cn": int(args.cn / token_num_sum * args.total_token_num),
-    #     "en": int(args.en / token_num_sum * args.total_token_num),
-    #     "baike": int(args.baike / token_num_sum * args.total_token_num),
-    #     "arxiv": int(args.arxiv / token_num_sum * args.total_token_num),
-    #     "code": int(args.code / token_num_sum * args.total_token_num),
-    #     "math": int(args.math / token_num_sum * args.total_token_num),
-    #     "instruction": int(args.instruction / token_num_sum * args.total_token_num),
-    #     "ai_search": int(args.ai_search / token_num_sum * args.total_token_num),
-    #     "278": int(args.log_278 / token_num_sum * args.total_token_num)
-    # }
-
     token_num_dict = {
-        "278":  args.total_token_num
+        "cn": int(args.cn / token_num_sum * args.total_token_num),
+        "en": int(args.en / token_num_sum * args.total_token_num),
+        "baike": int(args.baike / token_num_sum * args.total_token_num),
+        "arxiv": int(args.arxiv / token_num_sum * args.total_token_num),
+        "code": int(args.code / token_num_sum * args.total_token_num),
+        "math": int(args.math / token_num_sum * args.total_token_num),
+        "instruction": int(args.instruction / token_num_sum * args.total_token_num),
+        "ai_search": int(args.ai_search / token_num_sum * args.total_token_num),
+        "278": int(args.log_278 / token_num_sum * args.total_token_num)
     }
 
     for key in token_num_dict.keys():
