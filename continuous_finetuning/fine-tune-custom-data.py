@@ -119,8 +119,10 @@ def reshape_fn(tokenizer, examples):
     return {'input_ids': examples['input_ids'].view(-1, context_length)}
 
 
-def text_to_ids(tokenizer, text):
-    return tokenizer.encode(text)
+
+def text_to_ids(tokenizer, batch):
+    # When batched=True, batch['text'] is a list of strings
+    return {'input_ids': [tokenizer.encode(text) for text in batch['text']]}
 
 
 def add_mem_tokens(example, mem_freq, mem_id):
