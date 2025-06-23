@@ -17,7 +17,7 @@ torchrun  --nproc_per_node=8 \
         --num_train_epochs 1 \
         --per_device_train_batch_size 1 \
         --per_device_eval_batch_size 1 \
-        --gradient_accumulation_steps 1 \
+        --gradient_accumulation_steps 32 \
         --eval_strategy "no" \
         --save_strategy "epoch" \
         --save_total_limit 1 \
@@ -25,10 +25,11 @@ torchrun  --nproc_per_node=8 \
         --weight_decay 0.0 \
         --warmup_steps 20 \
         --lr_scheduler_type "constant_with_warmup" \
+        --deepspeed  ds_configs/stage3.json \
         --logging_steps 100     \
         --tf32 True \
         --report_to "none" \
         --use_wandb False \
-        --dataset_dir '../data/arxiv/arXiv_src_23*.json' \
+        --dataset_dir '../long_context_processed_data/arxiv/*.jsonl' \
         --method_name ${METHOD_NAME} \
         --wandb_name ${WANDB_NAME} 

@@ -299,7 +299,7 @@ def train():
     if rank == 0:
         barrier()
 
-    print(dataset)
+    # print(dataset)
 
     # add special config for landmark
     if model_args.method_name == "landmark":
@@ -314,7 +314,7 @@ def train():
                 mem_id=mem_id
             ), batched=False, num_proc=8)
     else:
-        dataset = dataset.map(partial(text_to_ids,tokenizer),batched=True, num_proc=8)
+        dataset = dataset.map(partial(text_to_ids,tokenizer),batched=True, num_proc=16)
         
     if model_args.use_wandb:
         project_name = f'long_extension'
@@ -330,7 +330,7 @@ def train():
     
     trainer = Trainer(
         model=model, tokenizer=tokenizer, args=training_args,
-        train_dataset=dataset['train'],
+        train_dataset=dataset,
         eval_dataset=None,
         data_collator=data_collator)
     trainer.train()
