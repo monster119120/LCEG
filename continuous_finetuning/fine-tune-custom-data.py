@@ -294,6 +294,7 @@ def train():
         barrier()
 
     dataset = load_dataset('json',data_files=model_args.dataset_dir)
+    dataset['train'] = dataset['train'].select(range(1000))
     
     
     if rank == 0:
