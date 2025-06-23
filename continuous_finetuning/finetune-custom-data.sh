@@ -15,9 +15,9 @@ torchrun  --nproc_per_node=8 \
         --use_flash_attn True \
         --low_rank_training False \
         --num_train_epochs 1 \
-        --per_device_train_batch_size 1 \
+        --per_device_train_batch_size 4 \
         --per_device_eval_batch_size 1 \
-        --gradient_accumulation_steps 32 \
+        --gradient_accumulation_steps 8 \
         --eval_strategy "no" \
         --save_strategy "epoch" \
         --save_total_limit 1 \

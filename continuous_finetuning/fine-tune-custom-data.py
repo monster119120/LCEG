@@ -294,7 +294,7 @@ def train():
         barrier()
 
     dataset = load_dataset('json',data_files=model_args.dataset_dir)
-    dataset['train'] = dataset['train'].select(range(1000))
+    dataset['train'] = dataset['train'].select(range(10000))
     
     
     if rank == 0:
@@ -331,7 +331,7 @@ def train():
     
     trainer = Trainer(
         model=model, tokenizer=tokenizer, args=training_args,
-        train_dataset=dataset,
+        train_dataset=dataset['train'],
         eval_dataset=None,
         data_collator=data_collator)
     trainer.train()

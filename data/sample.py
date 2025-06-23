@@ -10,7 +10,6 @@ import json
 import random
 
 from os.path import join
-from file_util import clear_dir
 
 from pdb import set_trace
 
@@ -51,16 +50,16 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     
-    parser.add_argument("--cn", type = float)
-    parser.add_argument("--baike", type = float)
-    parser.add_argument("--en", type = float)
-    parser.add_argument("--arxiv", type = float)
-    parser.add_argument("--math", type = float)
-    parser.add_argument("--code", type = float)
-    parser.add_argument("--instruction", type = float)
-    parser.add_argument("--ai_search", type = float)
-    parser.add_argument("--log_278", type = float)
-    parser.add_argument("--total_token_num", type = float, default = 1e10) # 10B
+    parser.add_argument("--cn", type = float, default = 1/9)
+    parser.add_argument("--baike", type = float, default = 1/9)
+    parser.add_argument("--en", type = float, default = 1/9)
+    parser.add_argument("--arxiv", type = float, default = 1/9)
+    parser.add_argument("--math", type = float, default = 1/9)
+    parser.add_argument("--code", type = float, default = 1/9)
+    parser.add_argument("--instruction", type = float, default = 1/9)
+    parser.add_argument("--ai_search", type = float, default = 1/9)
+    parser.add_argument("--log_278", type = float, default = 1/9)
+    parser.add_argument("--total_token_num", type = float, default = 1e9) # 10B
     parser.add_argument("--data_dir", type = str)
     parser.add_argument("--save_dir", type = str)
 
@@ -76,7 +75,7 @@ if __name__ == "__main__":
         "math": int(args.math / token_num_sum * args.total_token_num),
         "instruction": int(args.instruction / token_num_sum * args.total_token_num),
         "ai_search": int(args.ai_search / token_num_sum * args.total_token_num),
-        "log_278": int(args.log_278 / token_num_sum * args.total_token_num)
+        "278": int(args.log_278 / token_num_sum * args.total_token_num)
     }
 
     for key in token_num_dict.keys():
