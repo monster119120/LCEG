@@ -107,20 +107,20 @@ if __name__ == "__main__":
 
     token_num_sum = sum([args.cn, args.en, args.baike, args.arxiv, args.code, args.math, args.instruction, args.ai_search, args.log_278])
     token_num_dict = {
-        "cn": int(args.cn / token_num_sum * args.total_token_num),
-        "en": int(args.en / token_num_sum * args.total_token_num),
-        "baike": int(args.baike / token_num_sum * args.total_token_num),
-        "arxiv": int(args.arxiv / token_num_sum * args.total_token_num),
-        "code": int(args.code / token_num_sum * args.total_token_num),
-        "math": int(args.math / token_num_sum * args.total_token_num),
-        "instruction": int(args.instruction / token_num_sum * args.total_token_num),
-        "ai_search": int(args.ai_search / token_num_sum * args.total_token_num),
+        # "cn": int(args.cn / token_num_sum * args.total_token_num),
+        # "en": int(args.en / token_num_sum * args.total_token_num),
+        # "baike": int(args.baike / token_num_sum * args.total_token_num),
+        # "arxiv": int(args.arxiv / token_num_sum * args.total_token_num),
+        # "code": int(args.code / token_num_sum * args.total_token_num),
+        # "math": int(args.math / token_num_sum * args.total_token_num),
+        # "instruction": int(args.instruction / token_num_sum * args.total_token_num),
+        # "ai_search": int(args.ai_search / token_num_sum * args.total_token_num),
         "278": int(args.log_278 / token_num_sum * args.total_token_num)
     }
 
     for key in token_num_dict.keys():
         os.makedirs(args.save_dir, exist_ok = True)
-        save_path = join(args.save_dir, f"{key}.jsonl")
+        save_path = join(args.save_dir, f"{key}_short.jsonl")
         
         dataset = load_dataset(join(args.data_dir, key))
         print(f"Loaded {len(dataset)} documents from {key}")
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
         with open(save_path, "w", encoding = "utf-8") as f:
             for data in tqdm(sample_dataset, desc=f"Writing {key} data"):
-                f.write(json.dumps({"text": data[1]}, ensure_ascii = False) + "\n")
+                f.write(json.dumps({"text": data[1], "is_short": True}, ensure_ascii = False) + "\n")
         
         cur_token_num = cur_token_num / 1e9
         logger.info(f"data_type: {key}, token_num: {cur_token_num:.4f}B")

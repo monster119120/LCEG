@@ -121,8 +121,20 @@ def reshape_fn(tokenizer, examples):
 
 
 def text_to_ids(tokenizer, batch):
-    # When batched=True, batch['text'] is a list of strings
-    return {'input_ids': [tokenizer.encode(text, truncation=True, padding=True, max_length=16384) for text in batch['text']]}
+    """
+    For short text, we pad to 4096 tokens, for long text, we pad to 16384 tokens.
+    """
+    res = []
+    for text, is_short in zip(batch['text'], batch['is_short']):
+        
+        curr_input_ids = tokenizer.encode(text, truncation=True, padding=True, max_length=16384)
+        if is_short:
+            curr_input_ids = curr_input_ids[:4096] + [tokenizer.pad_token_id] * (16384 - 4096)
+        
+        res.append(curr_input_ids)
+
+    return {'input_ids': res}
+
 
 
 def add_mem_tokens(example, mem_freq, mem_id):
