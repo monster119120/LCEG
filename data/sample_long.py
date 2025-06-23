@@ -79,7 +79,7 @@ def get_sample_dataset(dataset, token_num):
             break
         else:
             sample_dataset.append(data)
-            cur_token_num += data[2]
+            cur_token_num += 16384
     
     return sample_dataset, cur_token_num
 
