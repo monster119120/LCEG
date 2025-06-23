@@ -17,7 +17,7 @@ torchrun  --nproc_per_node=8 \
         --num_train_epochs 1 \
         --per_device_train_batch_size 1 \
         --per_device_eval_batch_size 1 \
-        --gradient_accumulation_steps 8 \
+        --gradient_accumulation_steps 1 \
         --eval_strategy "no" \
         --save_strategy "epoch" \
         --save_total_limit 1 \
@@ -29,6 +29,6 @@ torchrun  --nproc_per_node=8 \
         --tf32 True \
         --report_to "none" \
         --use_wandb False \
-        --dataset_dir '../data/arxiv/arXiv_src_2301_001_cleaned.json' \
+        --dataset_dir '../data/arxiv/arXiv_src_23*.json' \
         --method_name ${METHOD_NAME} \
         --wandb_name ${WANDB_NAME} 

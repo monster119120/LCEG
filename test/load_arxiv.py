@@ -6,10 +6,14 @@ tokenizer = AutoTokenizer.from_pretrained("tiny-llama/")
 
 def text_to_ids(tokenizer, batch):
     # When batched=True, batch['text'] is a list of strings
-    return {'input_ids': [tokenizer.encode(text) for text in batch['tex_source']]}
+    try:
+        res = {'input_ids': [tokenizer.encode(text) for text in batch['tex_source'] if 'text_source' in text]}
+    except:
+        print(batch)
+    return res
 
 
-dataset = load_dataset('json',data_files='data/code/processed_arxiv_cleaned/arXiv_src_2505_116_cleaned.json')
+dataset = load_dataset('json',data_files='data/arxiv/arXiv_src_23*.json')
 
 dataset = dataset.map(partial(text_to_ids,tokenizer),batched=True, num_proc=8)
         
