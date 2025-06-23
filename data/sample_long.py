@@ -104,6 +104,7 @@ if __name__ == "__main__":
     parser.add_argument("--total_token_num", type = float, default = 1e9) # 1B
     parser.add_argument("--data_dir", type = str, default = "data_pool/")
     parser.add_argument("--save_dir", type = str, default = "tmp/")
+    parser.add_argument("--ratio", type = float, default = 0.6)
 
     args = parser.parse_args()
 
@@ -127,7 +128,7 @@ if __name__ == "__main__":
         dataset = load_dataset(join(args.data_dir, key))
         print(f"Loaded {len(dataset)} documents from {key}")
 
-        sample_dataset, cur_token_num = get_sample_dataset(dataset, token_num_dict[key])
+        sample_dataset, cur_token_num = get_sample_dataset(dataset, token_num_dict[key] * args.ratio)
 
         with open(save_path, "w", encoding = "utf-8") as f:
             for data in tqdm(sample_dataset, desc=f"Writing {key} data"):
