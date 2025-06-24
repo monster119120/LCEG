@@ -4,13 +4,12 @@
 
 long_ratio=${1:-0.8}
 token_num=${2:-5e8}
-short_ratio=$(echo "1 - $long_ratio" | bc)
 
 RECIPE_NAME=custom_data
 METHOD_NAME=yarn # option:[origin, pi, ntk, yarn]
 TRAINING_LENGTH=16384 
 MODEL_PATH="../Llama-2-7b-hf/"
-WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}_long${long_ratio}_short${short_ratio}_token${token_num}
+WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}_long${long_ratio}_token${token_num}
 
 torchrun  --nproc_per_node=8 \
         fine-tune-custom-data.py  \
@@ -36,6 +35,6 @@ torchrun  --nproc_per_node=8 \
         --tf32 True \
         --report_to "none" \
         --use_wandb False \
-        --dataset_dir "/root/paddlejob/workspace/env_run/afs_data/kongrui/long_context_exp_data/long${long_ratio}_short${short_ratio}_token${token_num}/*.jsonl" \
+        --dataset_dir "/root/paddlejob/workspace/env_run/afs_data/kongrui/long_context_exp_data/long${long_ratio}_token${token_num}/*.jsonl" \
         --method_name ${METHOD_NAME} \
         --wandb_name ${WANDB_NAME} 
