@@ -6,7 +6,7 @@ python data/sample_long.py \
     --data_dir "data_pool/" \
     --save_dir "data_pool/sampled_data" \
     --cn 2.875 --baike 2.875 --en 2.875 --arxiv 2.875 --math 19 --code 8 --instruction 8.05 --log_278 1.725 --ai_search 1.725 \
-    --ratio 0.6 \
+    --ratio 0.8 \
     --total_token_num 5e8   # 0.5B
 
 
@@ -14,7 +14,7 @@ python data/sample_short.py \
     --data_dir "data_pool/" \
     --save_dir "data_pool/sampled_data" \
     --cn 2.875 --baike 2.875 --en 2.875 --arxiv 2.875 --math 19 --code 8 --instruction 8.05 --log_278 1.725 --ai_search 1.725 \
-    --ratio 0.4 \
+    --ratio 0.2 \
     --total_token_num 5e8   # 0.5B
 
 
@@ -27,7 +27,7 @@ RECIPE_NAME=custom_data
 METHOD_NAME=yarn # option:[origin, pi, ntk, yarn]
 TRAINING_LENGTH=16384 
 MODEL_PATH="../Llama-2-7b-hf/"
-WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}_long0.6_short0.4
+WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}_long0.8_short0.2_0.5b
 
 torchrun  --nproc_per_node=8 \
         fine-tune-custom-data.py  \
