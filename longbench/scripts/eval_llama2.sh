@@ -24,8 +24,8 @@ models=(
     # "llama2-7b-hf-slimpajama-ntk-64k" \
     # "llama-2-7b-hf-slimpajama-ntk-64k-2B" \
     # "llama2-7b-hf-slimpajama-yarn-32k"
-    # "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2" \
-    "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4" \
+    "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2" \
+    # "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4" \
     )
 
 ### models test 4k
@@ -45,9 +45,9 @@ do
 for MODEL_NAME in  "${models[@]}"; 
 do
 echo "$dataset"
-pred.py \
---model ${MODEL_NAME} \
---dataset_name ${dataset} 
+CUDA_VISIBLE_DEVICES=0 python pred.py \
+    --model ${MODEL_NAME} \
+    --dataset_name ${dataset} 
 done
 done
 

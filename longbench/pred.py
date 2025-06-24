@@ -157,7 +157,7 @@ def load_model_and_tokenizer(path, model_name, device):
             path,
         )
         
-    elif model_name == "llama2-7b-hf-slimpajama-yarn-32k":
+    elif model_name in ["llama2-7b-hf-slimpajama-yarn-32k", "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4", "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2"]:
         from models.llama_yarn.modeling_llama_yarn import LlamaForCausalLM
         from models.llama_yarn.configuration_llama import LlamaConfig
         config_cls = LlamaConfig
