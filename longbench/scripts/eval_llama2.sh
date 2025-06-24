@@ -24,8 +24,8 @@ models=(
     # "llama2-7b-hf-slimpajama-ntk-64k" \
     # "llama-2-7b-hf-slimpajama-ntk-64k-2B" \
     # "llama2-7b-hf-slimpajama-yarn-32k"
-    "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2" \
-    # "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4" \
+    # "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2" \
+    "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4" \
     )
 
 ### models test 4k
@@ -40,14 +40,31 @@ models=(
 #     "llama2-7b-hf-slimpajama-yarn-32k-test4k"
 # )
 
-for dataset in "${datasets[@]}";
-do
-for MODEL_NAME in  "${models[@]}"; 
-do
-echo "$dataset"
-CUDA_VISIBLE_DEVICES=0 python pred.py \
-    --model ${MODEL_NAME} \
-    --dataset_name ${dataset} 
-done
+# Get the total number of datasets
+num_datasets=${#datasets[@]}
+# Define the GPUs to use
+gpus=(0 1 2 3 4 5 6 7)
+num_gpus=${#gpus[@]}
+
+# Process datasets in batches of 8, running each dataset on a separate GPU
+for ((i=0; i<num_datasets; i+=num_gpus)); do
+    for j in $(seq 0 $((num_gpus - 1))); do
+        dataset_index=$((i + j))
+        # Ensure we don't go past the end of the datasets array
+        if [ $dataset_index -lt $num_datasets ]; then
+            dataset=${datasets[$dataset_index]}
+            gpu_id=${gpus[$j]}
+            (
+                for MODEL_NAME in "${models[@]}"; do
+                    echo "Starting dataset ${dataset} with model ${MODEL_NAME} on GPU ${gpu_id}"
+                    CUDA_VISIBLE_DEVICES=$gpu_id python pred.py \
+                        --model "${MODEL_NAME}" \
+                        --dataset_name "${dataset}"
+                done
+            ) &
+        fi
+    done
+    # Wait for all background jobs in the current batch to complete
+    wait
 done
 
