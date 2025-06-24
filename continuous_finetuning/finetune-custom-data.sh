@@ -4,7 +4,7 @@
 
 long_ratio=${1:-0.8}
 token_num=${2:-5e8}
-short_ratio=$((1 - long_ratio))
+short_ratio=$(echo "1 - $long_ratio" | bc)
 
 RECIPE_NAME=custom_data
 METHOD_NAME=yarn # option:[origin, pi, ntk, yarn]
