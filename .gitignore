@@ -15,3 +15,4 @@ aneal_data
 data_pool/
 tmp/
 __pycache__/
+longbench/data/
