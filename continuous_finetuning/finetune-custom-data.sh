@@ -35,6 +35,6 @@ torchrun  --nproc_per_node=8 \
         --tf32 True \
         --report_to "none" \
         --use_wandb False \
-        --dataset_dir "/root/paddlejob/workspace/env_run/afs_data/kongrui/long_context_exp_data/long${long_ratio}-token${token_num}/*.jsonl" \
+        --dataset_dir "/root/paddlejob/workspace/env_run/afs_data/kongrui/long_context_exp_data/long${long_ratio}_token${token_num}/*.jsonl" \
         --method_name ${METHOD_NAME} \
         --wandb_name ${WANDB_NAME} 
