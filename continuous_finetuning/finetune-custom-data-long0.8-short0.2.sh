@@ -5,7 +5,7 @@ cd ../
 python data/sample_long.py \
     --data_dir "data_pool/" \
     --save_dir "data_pool/sampled_data" \
-    --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
+    --cn 2.875 --baike 2.875 --en 2.875 --arxiv 2.875 --math 19 --code 8 --instruction 8.05 --log_278 1.725 --ai_search 1.725 \
     --ratio 0.8 \
     --total_token_num 5e8   # 0.2B
 
@@ -13,7 +13,7 @@ python data/sample_long.py \
 python data/sample_short.py \
     --data_dir "data_pool/" \
     --save_dir "data_pool/sampled_data" \
-    --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
+    --cn 2.875 --baike 2.875 --en 2.875 --arxiv 2.875 --math 19 --code 8 --instruction 8.05 --log_278 1.725 --ai_search 1.725 \
     --ratio 0.2 \
     --total_token_num 5e8   # 0.2B
 
