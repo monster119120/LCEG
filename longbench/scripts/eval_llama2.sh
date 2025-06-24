@@ -14,16 +14,18 @@ datasets=("narrativeqa" "qasper" "multifieldqa_en" "hotpotqa" "2wikimqa" "musiqu
 
 ### models
 models=(
-    "llama2-7b-hf" \
-    "llama2-7b-hf-slimpajama-landmark" \
-    "llama2-7b-hf-lminfinite" \
-    "llama2-7b-hf-slimpajama-pi-32k" \
-    "llama2-7b-hf-slimpajama-longlora-32k" \ 
-    "llama2-7b-hf-ntk-frozen" \
-    "llama2-7b-hf-slimpajama-ntk-32k" \
-    "llama2-7b-hf-slimpajama-ntk-64k" \
-    "llama-2-7b-hf-slimpajama-ntk-64k-2B" \
-    "llama2-7b-hf-slimpajama-yarn-32k"
+    # "llama2-7b-hf" \
+    # "llama2-7b-hf-slimpajama-landmark" \
+    # "llama2-7b-hf-lminfinite" \
+    # "llama2-7b-hf-slimpajama-pi-32k" \
+    # "llama2-7b-hf-slimpajama-longlora-32k" \ 
+    # "llama2-7b-hf-ntk-frozen" \
+    # "llama2-7b-hf-slimpajama-ntk-32k" \
+    # "llama2-7b-hf-slimpajama-ntk-64k" \
+    # "llama-2-7b-hf-slimpajama-ntk-64k-2B" \
+    # "llama2-7b-hf-slimpajama-yarn-32k"
+    # "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2" \
+    "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4" \
     )
 
 ### models test 4k
