@@ -14,15 +14,17 @@ def visualize_results():
     context lengths. It also includes a subplot for the average score
     across all datasets. The generated plot is saved as a PNG file.
     """
-    models = [
-        'llama2-7b-hf',
-        'llama2-7b-hf-32k',
-        'llama2-7b-hf-slimpajama-ntk-32k',
-        'llama2-7b-hf-slimpajama-yarn-32k',
-        'llama2-7b-hf-slimpajama-pi-32k',
-        'llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4',
-        'llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2'
-    ]
+    model_labels = {
+        'llama2-7b-hf': 'Llama2-7B',
+        'llama2-7b-hf-32k': 'Llama2-32K',
+        'llama2-7b-hf-slimpajama-yarn-32k': 'YARN',
+        'llama2-7b-hf-slimpajama-pi-32k': 'PI',
+        'llama2-7b-hf-slimpajama-ntk-32k': 'NTK',
+        'llama2-7b-hf-slimpajama-yarn-16k-long0.6-token5e8': 'YARN-16K-Long0.6-Token5e8',
+        'llama2-7b-hf-slimpajama-yarn-16k-long0.8-token5e8': 'YARN-16K-Long0.8-Token5e8',
+    }
+
+    models = list(model_labels.keys())
     base_pred_path = 'pred'
     output_dir = 'plots'
     os.makedirs(output_dir, exist_ok=True)
@@ -48,15 +50,6 @@ def visualize_results():
     first_model_with_data = models[0]
     datasets = sorted(list(all_data[first_model_with_data].keys()))
     lengths = ["0-4k", "4-8k", "8-16k", "16-32k"]
-    model_labels = {
-        'llama2-7b-hf': 'Llama2-7B',
-        'llama2-7b-hf-32k': 'Llama2-32K',
-        'llama2-7b-hf-slimpajama-yarn-32k': 'YARN',
-        'llama2-7b-hf-slimpajama-pi-32k': 'PI',
-        'llama2-7b-hf-slimpajama-ntk-32k': 'NTK',
-        'llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4': 'YARN-16K-Long0.6-Short0.4',
-        'llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2': 'YARN-16K-Long0.8-Short0.2',
-    }
 
     avg_scores_sum = {model: {length: 0 for length in lengths} for model in models}
     avg_scores_count = {model: {length: 0 for length in lengths} for model in models}
