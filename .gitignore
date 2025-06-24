@@ -14,3 +14,4 @@ long_context_processed_data
 aneal_data
 data_pool/
 tmp/
+__pycache__/
