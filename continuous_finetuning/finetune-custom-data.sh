@@ -2,20 +2,20 @@
 
 cd ../
 
-python data/sample_long.py \
-    --data_dir "data_pool/" \
-    --save_dir "data_pool/sampled_data" \
-    --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
-    --ratio 0.6 \
-    --total_token_num 2e8   # 0.2B
+# python data/sample_long.py \
+#     --data_dir "data_pool/" \
+#     --save_dir "data_pool/sampled_data" \
+#     --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
+#     --ratio 0.6 \
+#     --total_token_num 2e8   # 0.2B
 
 
-python data/sample_short.py \
-    --data_dir "data_pool/" \
-    --save_dir "data_pool/sampled_data" \
-    --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
-    --ratio 0.4 \
-    --total_token_num 2e8   # 0.2B
+# python data/sample_short.py \
+#     --data_dir "data_pool/" \
+#     --save_dir "data_pool/sampled_data" \
+#     --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1 \
+#     --ratio 0.4 \
+#     --total_token_num 2e8   # 0.2B
 
 
 
@@ -48,7 +48,7 @@ torchrun  --nproc_per_node=8 \
         --weight_decay 0.0 \
         --warmup_steps 20 \
         --lr_scheduler_type "constant_with_warmup" \
-        --deepspeed  ds_configs/stage2.json \
+        --deepspeed  ds_configs/stage3.json \
         --logging_steps 100     \
         --tf32 True \
         --report_to "none" \
