@@ -1,33 +1,16 @@
 #!/bin/bash
 
-cd ../
-
-python data/sample_long.py \
-    --data_dir "data_pool/" \
-    --save_dir "data_pool/sampled_data" \
-    --cn 2.875 --baike 2.875 --en 2.875 --arxiv 2.875 --math 19 --code 8 --instruction 8.05 --log_278 1.725 --ai_search 1.725 \
-    --ratio 0.6 \
-    --total_token_num 2e8   # 0.2B
-
-
-python data/sample_short.py \
-    --data_dir "data_pool/" \
-    --save_dir "data_pool/sampled_data" \
-    --cn 2.875 --baike 2.875 --en 2.875 --arxiv 2.875 --math 19 --code 8 --instruction 8.05 --log_278 1.725 --ai_search 1.725 \
-    --ratio 0.4 \
-    --total_token_num 2e8   # 0.2B
-
-
-
-cd continuous_finetuning/
-
-
 # ----------------- Scripts for origin Llama, PI, NTK and YaRN Methos-------------------
+
+long_ratio=${1:-0.8}
+token_num=${2:-5e8}
+short_ratio=$((1 - long_ratio))
+
 RECIPE_NAME=custom_data
 METHOD_NAME=yarn # option:[origin, pi, ntk, yarn]
 TRAINING_LENGTH=16384 
 MODEL_PATH="../Llama-2-7b-hf/"
-WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}
+WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}_long${long_ratio}_short${short_ratio}_token${token_num}
 
 torchrun  --nproc_per_node=8 \
         fine-tune-custom-data.py  \
@@ -38,9 +21,9 @@ torchrun  --nproc_per_node=8 \
         --use_flash_attn True \
         --low_rank_training False \
         --num_train_epochs 1 \
-        --per_device_train_batch_size 4 \
+        --per_device_train_batch_size 2 \
         --per_device_eval_batch_size 1 \
-        --gradient_accumulation_steps 8 \
+        --gradient_accumulation_steps 16 \
         --eval_strategy "no" \
         --save_steps 100 \
         --save_total_limit 1 \
@@ -53,6 +36,6 @@ torchrun  --nproc_per_node=8 \
         --tf32 True \
         --report_to "none" \
         --use_wandb False \
-        --dataset_dir "../data_pool/sampled_data/*.jsonl" \
+        --dataset_dir "/root/paddlejob/workspace/env_run/afs_data/kongrui/long_context_exp_data/long${long_ratio}_short${short_ratio}_token${token_num}/*.jsonl" \
         --method_name ${METHOD_NAME} \
         --wandb_name ${WANDB_NAME} 
