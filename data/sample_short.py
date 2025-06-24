@@ -67,19 +67,45 @@ def load_dataset(data_dir):
     return dataset
 
 def get_sample_dataset(dataset, token_num):
+    TARGET_CHUNK_SIZE = 16384
     sample_dataset = []
-
-    random.shuffle(dataset)
-    cur_token_num = 0
-    for data in dataset:
-
-        if cur_token_num >= token_num:
-            break
-        else:
-            sample_dataset.append(data)
-            cur_token_num += min(4096, token_num)
     
-    return sample_dataset, cur_token_num
+    random.shuffle(dataset)
+    
+    total_tokens_collected = 0
+    if not dataset:
+        return [], 0
+
+    data_iterator = iter(dataset)
+    all_data_processed = False
+
+    while total_tokens_collected < token_num and not all_data_processed:
+        combined_text = ""
+        combined_tokens_in_chunk = 0
+        
+        chunk_full = False
+        while not chunk_full:
+            try:
+                data = next(data_iterator)
+                # data is (id, text, num_tokens)
+                
+                combined_text += data[1]
+                
+                if combined_tokens_in_chunk + data[2] >= TARGET_CHUNK_SIZE:
+                    combined_tokens_in_chunk = TARGET_CHUNK_SIZE
+                    chunk_full = True
+                else:
+                    combined_tokens_in_chunk += data[2]
+            
+            except StopIteration:
+                all_data_processed = True
+                break  # Exit inner loop
+        
+        if combined_text:
+            sample_dataset.append((None, combined_text, combined_tokens_in_chunk))
+            total_tokens_collected += combined_tokens_in_chunk
+            
+    return sample_dataset, total_tokens_collected
 
 if __name__ == "__main__":
 
