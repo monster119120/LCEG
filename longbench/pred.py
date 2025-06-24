@@ -79,7 +79,7 @@ def seed_everything(seed):
 def load_model_and_tokenizer(path, model_name, device):
     print('testing:', model_name)
     print('model path:', path)
-    if model_name == "llama2-7b-hf" or model_name == "llama2-7b-hf-slimpajama-pi-32k" or model_name == "llama2-7b-hf-slimpajama-longlora-32k":
+    if model_name == "llama2-7b-hf" or model_name == "llama2-7b-hf-32k" or model_name == "llama2-7b-hf-slimpajama-pi-32k" or model_name == "llama2-7b-hf-slimpajama-longlora-32k":
         config = transformers.AutoConfig.from_pretrained(path)
         print('rope_scaling:', config.rope_scaling)
         model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -157,7 +157,9 @@ def load_model_and_tokenizer(path, model_name, device):
             path,
         )
         
-    elif model_name in ["llama2-7b-hf-slimpajama-yarn-32k", "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4", "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2"]:
+    elif model_name in ["llama2-7b-hf-slimpajama-yarn-32k", 
+                        "llama2-7b-hf-slimpajama-yarn-16k-long0.6-short0.4-0.5b",
+                        "llama2-7b-hf-slimpajama-yarn-16k-long0.8-short0.2-0.5b"]:
         from models.llama_yarn.modeling_llama_yarn import LlamaForCausalLM
         from models.llama_yarn.configuration_llama import LlamaConfig
         config_cls = LlamaConfig
