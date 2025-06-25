@@ -11,7 +11,11 @@ TRAINING_LENGTH=16384
 MODEL_PATH="../Llama-2-7b-hf/"
 WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}_long${long_ratio}_token${token_num}
 
+MASTER_ADDR=localhost
+MASTER_PORT=${4:-29501}
 torchrun  --nproc_per_node=8 \
+        --master_addr ${MASTER_ADDR} \
+        --master_port ${MASTER_PORT} \
         fine-tune-custom-data.py  \
         --model_name_or_path ${MODEL_PATH} \
         --bf16 True \
