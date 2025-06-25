@@ -4,9 +4,9 @@
 
 long_ratio=${1:-0.8}
 token_num=${2:-5e8}
+METHOD_NAME=${3:-yarn} # option:[origin, pi, ntk, yarn]
 
 RECIPE_NAME=custom_data
-METHOD_NAME=yarn # option:[origin, pi, ntk, yarn]
 TRAINING_LENGTH=16384 
 MODEL_PATH="../Llama-2-7b-hf/"
 WANDB_NAME=${RECIPE_NAME}_${METHOD_NAME}_${TRAINING_LENGTH}_long${long_ratio}_token${token_num}
