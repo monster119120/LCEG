@@ -79,7 +79,11 @@ def seed_everything(seed):
 def load_model_and_tokenizer(path, model_name, device):
     print('testing:', model_name)
     print('model path:', path)
-    if model_name == "llama2-7b-hf" or model_name == "llama2-7b-hf-32k" or model_name == "llama2-7b-hf-slimpajama-pi-32k" or model_name == "llama2-7b-hf-slimpajama-longlora-32k":
+    if model_name == "llama2-7b-hf" or \
+        model_name == "llama2-7b-hf-32k" or \
+        model_name == "llama2-7b-hf-slimpajama-pi-32k" or \
+        model_name == "llama2-7b-hf-slimpajama-longlora-32k" or \
+        'pi' in model_name:
         config = transformers.AutoConfig.from_pretrained(path)
         print('rope_scaling:', config.rope_scaling)
         model = transformers.AutoModelForCausalLM.from_pretrained(
