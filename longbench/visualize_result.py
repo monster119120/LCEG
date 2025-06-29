@@ -17,11 +17,16 @@ def visualize_results():
     model_labels = {
         'llama2-7b-hf': 'Llama2-7B',
         'llama2-7b-hf-32k': 'Llama2-32K',
-        'llama2-7b-hf-slimpajama-yarn-32k': 'YARN',
-        'llama2-7b-hf-slimpajama-pi-32k': 'PI',
-        'llama2-7b-hf-slimpajama-ntk-32k': 'NTK',
+        # 'llama2-7b-hf-slimpajama-yarn-32k': 'YARN',
+        # 'llama2-7b-hf-slimpajama-pi-32k': 'PI',
+        # 'llama2-7b-hf-slimpajama-ntk-32k': 'NTK',
+        'llama2-7b-hf-slimpajama-pi-16k-long0.4-token5e8': 'PI-16K-Long0.4-Token5e8',
+        'llama2-7b-hf-slimpajama-yarn-16k-long0.4-token5e8': 'YARN-16K-Long0.4-Token5e8',
+        'llama2-7b-hf-slimpajama-pi-16k-long0.6-token5e8': 'PI-16K-Long0.6-Token5e8',
         'llama2-7b-hf-slimpajama-yarn-16k-long0.6-token5e8': 'YARN-16K-Long0.6-Token5e8',
+        'llama2-7b-hf-slimpajama-pi-16k-long0.8-token5e8': 'PI-16K-Long0.8-Token5e8',
         'llama2-7b-hf-slimpajama-yarn-16k-long0.8-token5e8': 'YARN-16K-Long0.8-Token5e8',
+        
     }
 
     models = list(model_labels.keys())

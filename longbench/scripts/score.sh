@@ -12,7 +12,11 @@ models=(
     # "llama-2-7b-hf-slimpajama-ntk-64k-2B" \
     "llama2-7b-hf-slimpajama-yarn-32k"
     "llama2-7b-hf-slimpajama-yarn-16k-long0.6-token5e8" \
-    "llama2-7b-hf-slimpajama-yarn-16k-long0.8-token5e8"
+    "llama2-7b-hf-slimpajama-yarn-16k-long0.8-token5e8" \
+    "llama2-7b-hf-slimpajama-yarn-16k-long0.4-token5e8" \
+    "llama2-7b-hf-slimpajama-pi-16k-long0.4-token5e8" \
+    "llama2-7b-hf-slimpajama-pi-16k-long0.6-token5e8" \
+    "llama2-7b-hf-slimpajama-pi-16k-long0.8-token5e8" \
     )
 
 ### models test 4k
