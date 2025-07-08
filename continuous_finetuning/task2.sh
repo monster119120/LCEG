@@ -8,7 +8,7 @@ MODEL_PATH="../Llama-2-7b-hf/"
 CKPT_NAME=SOURCE_LEN_${SOURCE_LEN}_TARGET_LEN${TARGET_LEN}
 
 MASTER_ADDR=localhost
-MASTER_PORT=${2:-29501}
+MASTER_PORT=${3:-29501}
 torchrun  --nproc_per_node=8 \
         --master_addr ${MASTER_ADDR} \
         --master_port ${MASTER_PORT} \
