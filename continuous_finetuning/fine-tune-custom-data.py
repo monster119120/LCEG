@@ -137,65 +137,14 @@ def reshape_fn(tokenizer, examples):
 
 def text_to_ids(tokenizer, batch):
     # When batched=True, batch['text'] is a list of strings
-    return {'input_ids': [tokenizer.encode(text, truncation=True, padding=True, max_length=16384) for text in batch['text']]}
+    return {'input_ids': [tokenizer.encode(text, truncation=True, padding=True, max_length=tokenizer.model_max_length) for text in batch['text']]}
 
-
-def add_mem_tokens(example, mem_freq, mem_id):
-    x = example["input_ids"]
-    ret = []
-    prev_idx = 0
-    for t_idx in range(mem_freq, len(x), mem_freq):
-        ret.extend(x[prev_idx:t_idx])
-        ret.append(mem_id)
-        prev_idx = t_idx
-    ret.extend(x[prev_idx:])
-    # drop attention_mask
-    return {"input_ids": ret}
 
 def train():
     parser = transformers.HfArgumentParser((ModelArguments, TrainingArguments))
     model_args, training_args = parser.parse_args_into_dataclasses()
     
-    if model_args.method_name == "pi":
-        print('training pi')
-        # Set RoPE scaling factor
-        config = transformers.AutoConfig.from_pretrained(
-            model_args.model_name_or_path
-        )
-        context_size = training_args.model_max_length
-        orig_ctx_len = getattr(config, "max_position_embeddings", None) # this value should be 4096 for LLaMA2 models
-        if orig_ctx_len and context_size > orig_ctx_len:
-            scaling_factor = float(math.ceil(context_size / orig_ctx_len))
-            config.rope_scaling = {"type": "linear", "factor": scaling_factor}
-            print(config.rope_scaling, flush=True)
-        model = transformers.AutoModelForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            config=config,
-            cache_dir=training_args.cache_dir,
-            use_flash_attention_2=True,
-            torch_dtype=torch.bfloat16,
-        )
-    elif model_args.method_name == "ntk":
-        print('training ntk-dynamic')
-        # Set RoPE scaling factor
-        config = transformers.AutoConfig.from_pretrained(
-            model_args.model_name_or_path
-        )
-        context_size = training_args.model_max_length
-        orig_ctx_len = getattr(config, "max_position_embeddings", None) # this value should be 4096 for LLaMA2 models
-        if orig_ctx_len and context_size > orig_ctx_len:
-            # set the ntk-dynamic half the scale
-            scaling_factor = float(math.ceil(context_size / orig_ctx_len / 2))
-            config.rope_scaling = {"type": "dynamic", "factor": scaling_factor}
-            print(config.rope_scaling, flush=True)
-        model = transformers.AutoModelForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            config=config,
-            cache_dir=training_args.cache_dir,
-            use_flash_attention_2=True,
-            torch_dtype=torch.bfloat16,
-        )
-    elif model_args.method_name == "yarn":
+    if model_args.method_name == "yarn":
         print('training yarn')
         from models.llama_yarn.modeling_llama_yarn import LlamaForCausalLM
         from models.llama_yarn.configuration_llama import LlamaConfig
@@ -219,55 +168,6 @@ def train():
             config=config,
             use_flash_attention_2=True
         )
-    elif model_args.method_name == "longlora":
-        # replace sparse shift attention for longlora
-        from models.llama_longlora.llama_attn_replace import replace_llama_attn
-        if training_args.low_rank_training:
-            print('training longlora with lora and sparse shift attention')
-        else:
-            print('training longlora with full-finetuning and sparse shift attention')
-        replace_llama_attn(training_args.use_flash_attn, training_args.use_full_attn)
-                # Set RoPE scaling factor
-        config = transformers.AutoConfig.from_pretrained(
-            model_args.model_name_or_path
-        )
-        context_size = training_args.model_max_length
-        orig_ctx_len = getattr(config, "max_position_embeddings", None) # this value should be 4096 for LLaMA2 models
-        if orig_ctx_len and context_size > orig_ctx_len:
-            scaling_factor = float(math.ceil(context_size / orig_ctx_len))
-            config.rope_scaling = {"type": "linear", "factor": scaling_factor}
-            print(config.rope_scaling, flush=True)
-        
-        model = transformers.AutoModelForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            config=config,
-            cache_dir=training_args.cache_dir,
-            torch_dtype=torch.bfloat16,
-        )
-
-        # use lora with "embed,norm" or use fullfinetuning
-        if training_args.low_rank_training:
-            targets=["q_proj", "k_proj", "v_proj", "o_proj"]
-
-            config = LoraConfig(
-                r=8,
-                lora_alpha=16,
-                target_modules=targets,
-                lora_dropout=0,
-                bias="none",
-                task_type="CAUSAL_LM",
-            )
-            model = get_peft_model(model, config)
-            # enable trainable params
-            [p.requires_grad_() for n, p in model.named_parameters() if any([k in n for k in training_args.trainable_params.split(",")])]
-    elif model_args.method_name == "landmark":
-        from models.llama_landmark.llama_mem import LlamaForCausalLM
-        model = LlamaForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir,
-            mem_freq=training_args.mem_freq,
-            include_landmark_in_loss=True
-        )
     elif model_args.method_name == "origin":
         print('training origin llama')
         model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -275,6 +175,8 @@ def train():
             use_flash_attention_2=True,
             torch_dtype=torch.bfloat16,
         )
+    else:
+        raise ValueError(f'Method {model_args.method_name} not supported')
         
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
@@ -294,9 +196,6 @@ def train():
         special_tokens_dict["bos_token"] = DEFAULT_BOS_TOKEN
     if tokenizer.unk_token is None:
         special_tokens_dict["unk_token"] = DEFAULT_UNK_TOKEN
-    if model_args.method_name == "landmark":
-        mem_token = "<landmark>"
-        special_tokens_dict["additional_special_tokens"] = [mem_token]
 
     smart_tokenizer_and_embedding_resize(
         special_tokens_dict=special_tokens_dict,
@@ -317,20 +216,7 @@ def train():
 
     # print(dataset)
 
-    # add special config for landmark
-    if model_args.method_name == "landmark":
-        mem_id = tokenizer.convert_tokens_to_ids(mem_token)
-        model.set_mem_id(mem_id)
-        remove_columns = [col for col in dataset['train'].column_names if col != 'input_ids']
-        dataset = dataset.map(partial(reshape_fn,tokenizer),batched=True, num_proc=8, remove_columns=remove_columns)
-        dataset = dataset.map(
-            partial(
-                add_mem_tokens, 
-                mem_freq=training_args.mem_freq, 
-                mem_id=mem_id
-            ), batched=False, num_proc=8)
-    else:
-        dataset = dataset.map(partial(text_to_ids,tokenizer),batched=True, num_proc=16)
+    dataset = dataset.map(partial(text_to_ids,tokenizer),batched=True, num_proc=16)
         
     if model_args.use_wandb:
         project_name = f'long_extension'
@@ -339,10 +225,9 @@ def train():
 
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
     
-    if model_args.method_name != "landmark":
-        model.config.use_cache = False         # required for gradient checkpointing
-        model.enable_input_require_grads()     # required for gradient checkpointing
-        model.gradient_checkpointing_enable()  # enable gradient checkpointing
+    model.config.use_cache = False         # required for gradient checkpointing
+    model.enable_input_require_grads()     # required for gradient checkpointing
+    model.gradient_checkpointing_enable()  # enable gradient checkpointing
     
     trainer = Trainer(
         model=model, tokenizer=tokenizer, args=training_args,
@@ -353,20 +238,9 @@ def train():
     trainer.save_state()
     trainer.save_model(output_dir=training_args.output_dir)
     
-    # save model for longlora
-    if model_args.method_name == "longlora" and training_args.low_rank_training:
-        print('saveing pytorch_model.bin with lora')
-        save_finetuned_model_dir = os.path.join(training_args.output_dir, 'finetuned_model')
-        if save_finetuned_model_dir is not None:
-            os.makedirs(save_finetuned_model_dir, exist_ok=True)
-        model.base_model.save_pretrained(save_finetuned_model_dir)
-        # save merged model
-        model = model.merge_and_unload()
-        save_finetuned_model_merged_dir = os.path.join(training_args.output_dir, 'finetuned_model_merged')
-        if save_finetuned_model_merged_dir is not None:
-            os.makedirs(save_finetuned_model_merged_dir, exist_ok=True)
-        model.save_pretrained(save_finetuned_model_merged_dir)
+
 
 
 if __name__ == "__main__":
     train()
+
