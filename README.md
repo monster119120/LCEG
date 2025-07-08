@@ -4,9 +4,30 @@ rsync -avh --partial --progress source/ destination/
 --cn 1 --baike 1 --en 1 --arxiv 1 --math 2 --code 2 --instruction 2 --log_278 1
 
 
+
+
+## Task2
+* 不筛选长文 + 短文数据
+* 筛选高质量长文数据 + 短文数据
+* 筛选高质量长文数据 + 人工合成长文数据 + 短文数据
+* 4k到32k到128k vs 4k到16k到32k到64k到128k（看看开源框架的支持）
+
+
+```bash
+rsync -avh --partial --progress ../afs_data/kongrui/Llama-2-7b-hf/ ./Llama-2-7b-hf/
+rsync -avh --partial --progress ../afs_data/kongrui/lceg/training_data/long0.6_token5e8 ./long0.6_token5e8_no_select/
+rsync -avh --partial --progress ../afs_data/kongrui/lceg/training_data/long0.6_token5e8_with_select ./long0.6_token5e8_with_select/
+rsync -avh --partial --progress ../afs_data/kongrui/lceg/training_data/long0.6_token5e8_with_select_with_synthesis ./long0.6_token5e8_with_select_with_synthesis/
+pip install -r requirements-pdc.txt
+```
+
+
+## Task1
+验证数据比例
+
 ### 下载模型
 ```bash
-rsync -avh --partial --progress workspace/env_run/afs_data/kongrui/Llama-2-7b-hf/ ./
+rsync -avh --partial --progress ../afs_data/kongrui/Llama-2-7b-hf/ ./Llama-2-7b-hf/
 ```
 
 ### 准备数据
